@@ -20,15 +20,6 @@ class BasicEvent:
 
     def __init__(self, eventid:str):
 
-        configFilePath = os.path.join(os.path.expanduser("~"), ".config", "eventNotifier.toml")
-        with open(configFilePath, 'rb') as toml_file:
-            data = tomli.load(toml_file)
-
-        try:
-            data['eventid']
-        except KeyError:
-            return            
-
         api_url = "https://api.seatgeek.com/2/events/" + data['eventid']
         api_params = {
             "client_id": data['key']
