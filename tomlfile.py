@@ -1,4 +1,5 @@
 import tomli
+import tomli_w
 import os
 
 class TomlFile:
@@ -9,10 +10,18 @@ class TomlFile:
     def __init__(self, filename:str):
         if filename == None:
             return
-    
-        self.configFilePath = os.path.join(os.path.expanduser("~"), ".config", filename)
-        with open(self.configFilePath, 'rb') as toml_file:
-            self.settings = tomli.load(toml_file)
+
+        self.configFilePath = os.path.join("/home/vdizon", ".config", filename)
+        try:
+            with open(self.configFilePath, 'rb') as toml_file:
+                self.settings = tomli.load(toml_file)
+        except FileNotFoundError:
+            file = open(self.configFilePath, 'x')
+            with open(self.configFilePath, 'rb') as toml_file:
+                self.settings = tomli.load(toml_file)
+
+
+
 
     def getValue(self, key:str):
        try:
@@ -21,7 +30,7 @@ class TomlFile:
            return None
 
     def addValue(self, key:str, value):
-        settings[key] = value 
+        self.settings[key] = value 
 
-        with open(self.configFilePath, 'rb') as toml_file:
-            tomli.dump(self.settings, toml_file)
+        with open(self.configFilePath, 'wb') as toml_file:
+            tomli_w.dump(self.settings, toml_file)

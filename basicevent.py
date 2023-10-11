@@ -1,6 +1,7 @@
 import requests
 import json
 import notify2
+import tomlfile
 from dateutil import parser as dateparser
 import tomli
 import os
@@ -16,18 +17,19 @@ class BasicEvent:
     time = None
     performer = None
     venue = None
-    
 
-    def __init__(self, eventid:str):
+    def __init__(self, settingsfile:tomlfile.TomlFile):
+        eventid = settingsfile.getValue('eventid')
+        clientid = settingsfile.getValue('clientid')
 
-        api_url = "https://api.seatgeek.com/2/events/" + data['eventid']
-        api_params = {
-            "client_id": data['key']
-        }
-
-        if(eventid == None):
-            print("No eventid")
+        if(eventid == None or clientid == None):
+            print("No event id or client id, please configure, run this command with -h for more information")
             exit()
+
+        api_url = "https://api.seatgeek.com/2/events/" + eventid
+        api_params = {
+            "client_id": clientid
+        }
 
         self.eventid = eventid
         self.response = requests.get(api_url, api_params)
