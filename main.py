@@ -18,13 +18,20 @@ def main():
     args = parser.parse_args()
 
     settingsFile = tomlfile.TomlFile("concertReminder.toml")
-    eventid = f"{args.eventid}"
-    key = f"{args.key}"    
+    eventidArg = f"{args.eventid}"
+    keyArg = f"{args.key}"    
 
-    addSettings(eventid, key, settingsFile)
 
-    eventid = basicevent.BasicEvent(settingsFile)
-    eventid.getReminder()
+    addSettings(eventid=eventidArg, key=keyArg, tomlfile=settingsFile)
+    eventid = settingsFile.getValue('eventid')
+    key = settingsFile.getValue('key')
+    
+    if(key == None or eventid == None):
+        print("No event ID or client ID configured, run this command with -h for more information")
+        exit()
+
+    event = basicevent.BasicEvent(eventid=eventid, clientid=key)
+    event.getReminder()
 
 
 def addSettings(eventid:str, key:str, tomlfile:tomlfile.TomlFile):
@@ -32,7 +39,6 @@ def addSettings(eventid:str, key:str, tomlfile:tomlfile.TomlFile):
         tomlfile.addValue("eventid", eventid)
     if(key != "None"):
         tomlfile.addValue("key", key)
-    exit()
 
 
 init()

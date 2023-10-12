@@ -1,8 +1,8 @@
 import requests
 import json
 import notify2
-import tomlfile
 from dateutil import parser as dateparser
+import datetime
 import tomli
 import os
 
@@ -18,13 +18,7 @@ class BasicEvent:
     performer = None
     venue = None
 
-    def __init__(self, settingsfile:tomlfile.TomlFile):
-        eventid = settingsfile.getValue('eventid')
-        clientid = settingsfile.getValue('clientid')
-
-        if(eventid == None or clientid == None):
-            print("No event id or client id, please configure, run this command with -h for more information")
-            exit()
+    def __init__(self, clientid:str, eventid:str):
 
         api_url = "https://api.seatgeek.com/2/events/" + eventid
         api_params = {
@@ -45,15 +39,13 @@ class BasicEvent:
     
     def getReminder(self):
         title = self.getValue("title")
-        print(title)
-
+        title = title[1:len(title)-1] + " "
         notify2.init("event reminder")
-        notification = notify2.Notification(title)
-        notification.show()
         dateRaw = self.getValue("datetime_local")
         dateParsed = dateparser.parse(dateRaw[1:len(dateRaw) - 1])
-        
-        # text = "The " + self.getValue("type") + " at " + date.date()
+        timeUntil = "is in " + str(dateParsed - datetime.datetime.now()) 
+        notification = notify2.Notification(summary = title + timeUntil)
+        notification.show()
 
 
             

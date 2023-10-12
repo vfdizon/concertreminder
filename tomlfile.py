@@ -27,7 +27,7 @@ class TomlFile:
        try:
            return self.settings[key]
        except KeyError:
-           return None
+            return None
 
     def addValue(self, key:str, value):
         self.settings[key] = value 
