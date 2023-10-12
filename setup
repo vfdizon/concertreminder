@@ -2,5 +2,7 @@
 
 directory=$PWD
 cmd="python3 $PWD/main.py"
-echo "#!/bin/bash" > testbin
-echo $cmd >> testbin
+echo "#!/bin/bash" > /bin/concertreminder
+echo $cmd >> /bin/concertreminder
+
+chmod +x /bin/concertreminder
